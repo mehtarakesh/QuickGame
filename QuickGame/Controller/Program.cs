@@ -13,7 +13,7 @@ using UIKit;
 #endif
 #endregion
 
-namespace QuickGame
+namespace QuickGame.Controller
 {
 	#if __IOS__ || __TVOS__
     [Register("AppDelegate")]
