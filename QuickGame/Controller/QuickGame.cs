@@ -18,6 +18,10 @@ namespace QuickGame.Controller
 	/// </summary>
 	public class QuickGame : Game
 	{
+		//Number that holds the player score
+		int score;
+		// The font used to display UI elements
+		SpriteFont font;
 		Texture2D explosionTexture;
 		List<Animation> explosions;
 		// The sound that is played when a laser is fired
@@ -90,6 +94,8 @@ namespace QuickGame.Controller
 			projectiles = new List<Projectile>();
 
 			explosions = new List<Animation>();
+			//Set player's score to zero
+			score = 0;
 			// Set the laser to fire every quarter second
 			fireTime = TimeSpan.FromSeconds(.15f);
 
@@ -146,6 +152,8 @@ namespace QuickGame.Controller
 			laserSound = Content.Load<SoundEffect>("Sound/laserFire");
 			explosionSound = Content.Load<SoundEffect>("Sound/explosion");
 
+			// Load the score font
+			font = Content.Load<SpriteFont>("Font/gameFont");
 			// Start the music right away
 			PlayMusic(gameplayMusic);
 
@@ -261,6 +269,12 @@ namespace QuickGame.Controller
 				AddProjectile(player.Position + new Vector2(player.Width / 2, 0));
 				laserSound.Play();
 			}
+			// reset score if player health goes to zero
+			if (player.Health <= 0)
+			{
+				player.Health = 100;
+				score = 0;
+			}
 		}
 
 		private void UpdateProjectiles()
@@ -308,15 +322,20 @@ namespace QuickGame.Controller
 			{
 				explosions[i].Draw(spriteBatch);
 			}
+			// Draw the score
+			spriteBatch.DrawString(font, "score: " + score, new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y), Color.White);
+			// Draw the player health
+			spriteBatch.DrawString(font, "health: " + player.Health, new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y + 30), Color.White);
 			// Draw the Player
 			player.Draw(spriteBatch);
 
 			// Stop drawing
 			spriteBatch.End();
             
-			//TODO: Add your drawing code here
-            
+
 			base.Draw (gameTime);
+
+
 		}
 
 		private void AddEnemy()
@@ -364,6 +383,8 @@ namespace QuickGame.Controller
 					{
 						// Add an explosion
 						AddExplosion(enemies[i].Position);
+						//Add to the player's score
+						score += enemies[i].Value;
 						explosionSound.Play();
 					}
 					enemies.RemoveAt(i);
