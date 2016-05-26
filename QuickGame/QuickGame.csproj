@@ -51,6 +51,7 @@
     <Compile Include="Controller\QuickGame.cs" />
     <Compile Include="Model\Player.cs" />
     <Compile Include="View\Animation.cs" />
+    <Compile Include="View\Parallaxingbackground.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
