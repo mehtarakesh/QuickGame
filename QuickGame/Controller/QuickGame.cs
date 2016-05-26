@@ -68,7 +68,7 @@ namespace QuickGame.Controller
 			spriteBatch = new SpriteBatch (GraphicsDevice);
 			// Load the player resources 
 			Vector2 playerPosition = new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X,GraphicsDevice.Viewport.TitleSafeArea.Y +GraphicsDevice.Viewport.TitleSafeArea.Height / 2);
-			player.Initialize(Content.Load<Texture2D>("player"), playerPosition);
+			player.Initialize(Content.Load<Texture2D>("Texture/player"), playerPosition);
 			//TODO: use this.Content to load your game content here 
 		}
 
