@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace QuickGame
+namespace QuickGame.View
 {
 	public class Parallaxingbackground
 	{
