@@ -86,7 +86,17 @@ namespace QuickGame.Controller
 				Exit ();
 			#endif
             
-			// TODO: Add your update logic here
+			// Save the previous state of the keyboard and game pad so we can determinesingle key/button presses
+			previousGamePadState = currentGamePadState;
+			previousKeyboardState = currentKeyboardState;
+
+			// Read the current state of the keyboard and gamepad and store it
+			currentKeyboardState = Keyboard.GetState();
+			currentGamePadState = GamePad.GetState(PlayerIndex.One);
+
+
+			//Update the player
+			UpdatePlayer(gameTime);
             
 			base.Update (gameTime);
 		}
