@@ -195,8 +195,8 @@ namespace QuickGame.Controller
 		private void AddDynomite(Vector2 position)
 		{
 			Dynomite dynomite = new Dynomite(); 
-			dynomite.Initialize(GraphicsDevice.Viewport, projectileTexture,position); 
-			dynomites.Add(dynomite);
+			dynomite.Initialize(GraphicsDevice.Viewport, dynomiteTexture,position); 
+			//dynomites.Add(dynomite);
 		}
 
 
