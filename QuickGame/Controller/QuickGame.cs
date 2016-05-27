@@ -18,6 +18,12 @@ namespace QuickGame.Controller
 	/// </summary>
 	public class QuickGame : Game
 	{
+		Texture2D poisonTexture;
+		List<Poision> enemyPoison;
+		TimeSpan poisonSpawnTime;
+		TimeSpan previousTime;
+		Random randomPoison;
+
 		//Number that holds the player score
 		int score;
 		// The font used to display UI elements
@@ -33,7 +39,7 @@ namespace QuickGame.Controller
 		// The music played during gameplay
 		Song gameplayMusic;
 		Texture2D projectileTexture;
-		Texture2D poison;
+		//Texture2D poison;
 		List<Projectile> projectiles;
 
 		// The rate of fire of the player laser
@@ -113,6 +119,12 @@ namespace QuickGame.Controller
 
 			// Initialize our random number generator
 			random = new Random();
+
+			enemyPoison = new List<Poision> ();
+			previousTime = TimeSpan.Zero;
+			poisonSpawnTime = TimeSpan.FromSeconds (1.0f);
+			random = new Random ();
+
 			// Set a constant player move speed
 			playerMoveSpeed = 8.0f;
 
@@ -146,8 +158,9 @@ namespace QuickGame.Controller
 			bgLayer1.Initialize(Content, "Texture/bgLayer1", GraphicsDevice.Viewport.Width, -1);
 			bgLayer2.Initialize(Content, "Texture/bgLayer2", GraphicsDevice.Viewport.Width, -2);
 			enemyTexture = Content.Load<Texture2D>("Animation/mineAnimation");
+		
 			projectileTexture = Content.Load<Texture2D>("Texture/laser");
-			//poison = Content.Load<Texture2D> ("Texture/PoisonBottle") ();
+			poisonTexture = Content.Load<Texture2D> ("Texture/PoisonBottle");
 			explosionTexture = Content.Load<Texture2D>("Animation/explosion"); 
 			// Load the music
 			gameplayMusic = Content.Load<Song>("Sound/gameMusic");
@@ -212,6 +225,7 @@ namespace QuickGame.Controller
 			bgLayer1.Update();
 			bgLayer2.Update();
 			UpdateEnemies(gameTime);
+			UpdatePoison (gameTime);
 
 			// Update the collision
 			UpdateCollision();
@@ -316,6 +330,11 @@ namespace QuickGame.Controller
 			for (int i = 0; i < enemies.Count; i++)
 			{
 				enemies[i].Draw(spriteBatch);
+				// Draw the Projectiles
+			}
+			for (int i = 0; i < enemyPoison.Count; i++)
+			{
+				enemyPoison[i].Draw(spriteBatch);
 				// Draw the Projectiles
 			}
 			for (int i = 0; i < projectiles.Count; i++)
@@ -476,6 +495,44 @@ namespace QuickGame.Controller
 						projectiles[i].Active = false;
 					}
 				}
+			}
+		}
+
+		private void AddPoison()
+		{
+			Animation poisonAnimation = new Animation ();
+
+			poisonAnimation.Initialize (poisonTexture, Vector2.Zero, 47, 61, 8, 30, Color.White, 1f, true);
+
+			Vector2 position = new Vector2(GraphicsDevice.Viewport.Width +poisonTexture.Width / 2, random.Next(100, GraphicsDevice.Viewport.Height -100));
+
+			Poision poison = new Poision ();
+
+			poison.Initialize (poisonAnimation, position);
+
+			enemyPoison.Add (poison);
+		}
+
+		private void UpdatePoison(GameTime gameTime)
+		{
+			// Spawn a new enemy enemy every 1.5 seconds
+			if (gameTime.TotalGameTime - previousSpawnTime > enemySpawnTime) 
+			{
+				previousSpawnTime = gameTime.TotalGameTime;
+
+				// Add an Enemy
+				AddPoison();
+			}
+
+			// Update the Enemies
+			for (int i = enemyPoison.Count - 1; i >= 0; i--) 
+			{
+				enemyPoison[i].Update(gameTime);
+
+				if (enemyPoison[i].Active == false)
+				{
+					enemyPoison.RemoveAt(i);
+				} 
 			}
 		}
 	}

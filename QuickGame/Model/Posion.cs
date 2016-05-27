@@ -1,57 +1,97 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using QuickGame.View;
 
 namespace QuickGame.Model
 {
 	public class Poision
 	{
-		public Texture2D Texture;
-		public int Damage;
-		public bool Active;
+		// Animation representing the enemy
+		public Animation EnemyAnimation;
+
+		// The position of the enemy ship relative to the top left corner of thescreen
 		public Vector2 Position;
-		Viewport viewport;
-		float projectileMoveSpeed;
 
-		// Get the width of the projectile ship
-		public int Width 
+		// The state of the Enemy Ship
+		public bool Active;
+
+		// The hit points of the enemy, if this goes to zero the enemy dies
+		public int Health;
+
+		// The amount of damage the enemy inflicts on the player ship
+		public int Damage;
+
+		// The amount of score the enemy will give to the player
+		public int Value;
+
+		// Get the width of the enemy ship
+		public int Width
 		{
-			get { return Texture.Width; }
+			get { return EnemyAnimation.FrameWidth; } 
 		}
 
-		// Get the height of the projectile ship
-		public int Height 
+		// Get the height of the enemy ship
+		public int Height
 		{
-			get { return Texture.Height; }
+			get { return EnemyAnimation.FrameHeight; } 
 		}
 
-		public void Initialize (Viewport viewport, Texture2D texture, Vector2 position)
+		// The speed at which the enemy moves
+		float enemyMoveSpeed;
+
+		public void Initialize(Animation animation,Vector2 position)
 		{
-			Texture = texture;
+			// Load the enemy ship texture
+			EnemyAnimation = animation;
+
+			// Set the position of the enemy
 			Position = position;
-			this.viewport = viewport;
 
+			// We initialize the enemy to be active so it will be update in the game
 			Active = true;
 
-			Damage = 50;
 
-			projectileMoveSpeed = 5;
+			// Set the health of the enemy
+			Health = 10;
+
+			// Set the amount of damage the enemy can do
+			Damage = 10;
+
+			// Set how fast the enemy moves
+			enemyMoveSpeed = 6f;
+
+
+			// Set the score value of the enemy
+			Value = 100;
+
 		}
 
-		public void Update ()
-		{
-			// Projectiles always move to the right
-			Position.X += projectileMoveSpeed;
 
-			// Deactivate the bullet if it goes out of screen
-			if (Position.X + Texture.Width / 2 > viewport.Width)
+		public void Update(GameTime gameTime)
+		{ 
+			// The enemy always moves to the left so decrement it's xposition
+			Position.X -= enemyMoveSpeed;
+
+			// Update the position of the Animation
+			EnemyAnimation.Position = Position;
+
+			// Update Animation
+			EnemyAnimation.Update (gameTime);
+
+			// If the enemy is past the screen or its health reaches 0 then deactivateit
+			if (Position.X < -Width || Health <= 0) {
+				// By setting the Active flag to false, the game will remove this objet fromthe
+				// active game list
 				Active = false;
+			}
 		}
 
 		public void Draw(SpriteBatch spriteBatch)
 		{
-			spriteBatch.Draw(Texture, Position, null, Color.White, 0f,
-				new Vector2(Width / 2, Height / 2), 1f, SpriteEffects.None, 0f);
+			// Draw the animation
+			EnemyAnimation.Draw(spriteBatch);
 		}
+
 	}
 }
