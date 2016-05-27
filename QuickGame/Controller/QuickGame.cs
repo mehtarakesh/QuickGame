@@ -18,6 +18,13 @@ namespace QuickGame.Controller
 	/// </summary>
 	public class QuickGame : Game
 	{
+		Texture2D dynomiteTexture;
+		List<Projectile> dynomites;
+		TimeSpan dynomiteTime;
+		TimeSpan previousDynomiteTime;
+
+
+
 		Texture2D poisonTexture;
 		List<Poision> enemyPoison;
 		TimeSpan poisonSpawnTime;
@@ -125,6 +132,10 @@ namespace QuickGame.Controller
 			poisonSpawnTime = TimeSpan.FromSeconds (1.0f);
 			random = new Random ();
 
+			dynomites = new List<Projectile> ();
+			dynomiteTime = TimeSpan.FromSeconds (.15f);
+
+
 			// Set a constant player move speed
 			playerMoveSpeed = 8.0f;
 
@@ -162,6 +173,7 @@ namespace QuickGame.Controller
 			projectileTexture = Content.Load<Texture2D>("Texture/laser");
 			poisonTexture = Content.Load<Texture2D> ("Texture/poisonBottle");
 			explosionTexture = Content.Load<Texture2D>("Animation/explosion"); 
+			dynomiteTexture = Content.Load<Texture2D> ("Texture/Dynomite");
 			// Load the music
 			gameplayMusic = Content.Load<Song>("Sound/gameMusic");
 
@@ -179,6 +191,14 @@ namespace QuickGame.Controller
 			mainBackground = Content.Load<Texture2D>("Texture/mainbackground");
 			//TODO: use this.Content to load your game content here 
 		}
+
+		private void AddDynomite(Vector2 position)
+		{
+			Dynomite dynomite = new Dynomite(); 
+			dynomite.Initialize(GraphicsDevice.Viewport, projectileTexture,position); 
+			dynomites.Add(dynomite);
+		}
+
 
 		private void PlayMusic(Song song)
 		{
@@ -231,6 +251,8 @@ namespace QuickGame.Controller
 			UpdateCollision();
 			// Update the projectiles
 			UpdateProjectiles();
+			UpdateDynomite();
+
 			// Update the explosions
 			UpdateExplosions(gameTime);
             
@@ -288,11 +310,35 @@ namespace QuickGame.Controller
 				AddProjectile(player.Position + new Vector2(player.Width / 2, 0));
 				laserSound.Play();
 			}
+
+			// Fire only every interval we set as the fireTime
+			if (gameTime.TotalGameTime - previousFireTime > fireTime)
+			{
+				// Reset our current time
+				previousFireTime = gameTime.TotalGameTime;
+
+				// Add the projectile, but add it to the front and center of the player
+				AddDynomite(player.Position + new Vector2(player.Width / 2, 0));
+			}
 			// reset score if player health goes to zero
 			if (player.Health <= 0)
 			{
 				player.Health = 100;
 				score = 0;
+			}
+		}
+
+		private void UpdateDynomite()
+		{
+			// Update the Projectiles
+			for (int i = dynomites.Count - 1; i >= 0; i--) 
+			{
+				dynomites[i].Update();
+
+				if (projectiles[i].Active == false)
+				{
+					dynomites.RemoveAt(i);
+				} 
 			}
 		}
 
@@ -340,6 +386,11 @@ namespace QuickGame.Controller
 			for (int i = 0; i < projectiles.Count; i++)
 			{
 				projectiles[i].Draw(spriteBatch);
+			}
+			// Draw the Projectiles
+			for (int i = 0; i < dynomites.Count; i++)
+			{
+				dynomites[i].Draw(spriteBatch);
 			}
 			// Draw the explosions
 			for (int i = 0; i < explosions.Count; i++)
@@ -493,6 +544,26 @@ namespace QuickGame.Controller
 					{
 						enemies[j].Health -= projectiles[i].Damage;
 						projectiles[i].Active = false;
+					}
+				}
+			}
+
+			// Projectile vs Enemy Collision
+			for (int i = 0; i < dynomites.Count; i++) {
+				for (int j = 0; j < enemies.Count; j++) {
+					// Create the rectangles we need to determine if we collided with each other
+					rectangle1 = new Rectangle ((int)dynomites [i].Position.X -
+					dynomites [i].Width / 2, (int)dynomites [i].Position.Y -
+					dynomites [i].Height / 2, dynomites [i].Width, dynomites [i].Height);
+
+					rectangle2 = new Rectangle ((int)enemies [j].Position.X - enemies [j].Width / 2,
+						(int)enemies [j].Position.Y - enemies [j].Height / 2,
+						enemies [j].Width, enemies [j].Height);
+
+					// Determine if the two objects collided with each other
+					if (rectangle1.Intersects (rectangle2)) {
+						enemies [j].Health -= projectiles [i].Damage;
+						dynomites [i].Active = false;
 					}
 				}
 			}
