@@ -55,6 +55,7 @@
     <Compile Include="Model\Enemy.cs" />
     <Compile Include="Model\Projectile.cs" />
     <Compile Include="Model\Posion.cs" />
+    <Compile Include="Model\Dynomite.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
