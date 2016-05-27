@@ -33,6 +33,7 @@ namespace QuickGame.Controller
 		// The music played during gameplay
 		Song gameplayMusic;
 		Texture2D projectileTexture;
+		Texture2D poison;
 		List<Projectile> projectiles;
 
 		// The rate of fire of the player laser
@@ -93,6 +94,8 @@ namespace QuickGame.Controller
 
 			projectiles = new List<Projectile>();
 
+			//poison = new Texture2D ();
+
 			explosions = new List<Animation>();
 			//Set player's score to zero
 			score = 0;
@@ -144,6 +147,7 @@ namespace QuickGame.Controller
 			bgLayer2.Initialize(Content, "Texture/bgLayer2", GraphicsDevice.Viewport.Width, -2);
 			enemyTexture = Content.Load<Texture2D>("Animation/mineAnimation");
 			projectileTexture = Content.Load<Texture2D>("Texture/laser");
+			//poison = Content.Load<Texture2D> ("Texture/PoisonBottle") ();
 			explosionTexture = Content.Load<Texture2D>("Animation/explosion"); 
 			// Load the music
 			gameplayMusic = Content.Load<Song>("Sound/gameMusic");
@@ -151,6 +155,7 @@ namespace QuickGame.Controller
 			// Load the laser and explosion sound effect
 			laserSound = Content.Load<SoundEffect>("Sound/laserFire");
 			explosionSound = Content.Load<SoundEffect>("Sound/explosion");
+	
 
 			// Load the score font
 			font = Content.Load<SpriteFont>("Font/gameFont");
