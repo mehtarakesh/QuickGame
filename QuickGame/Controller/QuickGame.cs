@@ -160,7 +160,7 @@ namespace QuickGame.Controller
 			enemyTexture = Content.Load<Texture2D>("Animation/mineAnimation");
 		
 			projectileTexture = Content.Load<Texture2D>("Texture/laser");
-			poisonTexture = Content.Load<Texture2D> ("Texture/PoisonBottle");
+			poisonTexture = Content.Load<Texture2D> ("Texture/poisonBottle");
 			explosionTexture = Content.Load<Texture2D>("Animation/explosion"); 
 			// Load the music
 			gameplayMusic = Content.Load<Song>("Sound/gameMusic");
@@ -502,7 +502,7 @@ namespace QuickGame.Controller
 		{
 			Animation poisonAnimation = new Animation ();
 
-			poisonAnimation.Initialize (poisonTexture, Vector2.Zero, 47, 61, 8, 30, Color.White, 1f, true);
+			poisonAnimation.Initialize (poisonTexture, Vector2.Zero, 80, 35, 15, 30, Color.White, 1f, true);
 
 			Vector2 position = new Vector2(GraphicsDevice.Viewport.Width +poisonTexture.Width / 2, random.Next(100, GraphicsDevice.Viewport.Height -100));
 

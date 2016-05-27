@@ -175,7 +175,7 @@
 /processorParam:TextureFormat=Color
 /build:Texture/bgLayer1.png
 
-#begin Texture/PoisonBottle.png.png
+#begin Texture/poisonBottle.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -185,5 +185,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Texture/PoisonBottle.png.png
+/build:Texture/poisonBottle.png
 
